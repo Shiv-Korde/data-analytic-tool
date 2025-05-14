@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 
 def load_testbench_data(file):
     # Decode bytes to string for line-by-line processing
@@ -36,3 +37,8 @@ def load_testbench_data(file):
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
     return df.dropna(subset=["timestamp"])
+
+
+def detect_anomalies(df, col, threshold=3.0):
+    z_scores = (df[col] - df[col].mean()) / df[col].std()
+    return df[np.abs(z_scores) > threshold]
