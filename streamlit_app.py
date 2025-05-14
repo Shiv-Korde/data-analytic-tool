@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from helpers import detect_anomalies, load_testbench_data
+from utils import detect_anomalies, load_testbench_data
 import json
 import os
 
@@ -15,7 +15,7 @@ uploaded_file = st.file_uploader("Upload Test Bench File (.txt)", type=["txt"])
 if uploaded_file:
     df = load_testbench_data(uploaded_file)
     st.success(f"Loaded {df.shape[0]} rows.")
-    signals = df.columns[1:]
+    signals = df.columns[1:]  # exclude timestamp
 
     with st.sidebar:
         st.header("🛠️ Visualization Config")
@@ -35,6 +35,7 @@ if uploaded_file:
             signal_choice = cfg["signal"]
         st.sidebar.success("Config loaded.")
 
+    # Plotting
     st.subheader(f"📈 Signal: {signal_choice}")
     plot_df = df[["timestamp", signal_choice]].copy()
 
